@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>for madu.</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --rose: #b85c78;
+    --rose-light: #e8a0b4;
+    --rose-pale: #f5e0e8;
+    --cream: #fdf6f0;
+    --cream-2: #fff8fb;
+    --dark: #2d1f29;
+    --dark-mid: #4a2e3c;
+    --muted: #8a6572;
+    --muted-2: #c9839a;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--cream);
+    font-family: 'DM Sans', sans-serif;
+    color: var(--dark);
+    overflow-x: hidden;
+    cursor: none;
+  }
+
+  /* Custom cursor */
+  .cursor {
+    position: fixed;
+    width: 10px;
+    height: 10px;
+    background: var(--rose);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 9999;
+    transform: translate(-50%, -50%);
+    transition: transform 0.1s, width 0.3s, height 0.3s, background 0.3s;
+  }
+  .cursor-ring {
+    position: fixed;
+    width: 36px;
+    height: 36px;
+    border: 1px solid var(--rose-light);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 9998;
+    transform: translate(-50%, -50%);
+    transition: transform 0.15s ease, width 0.3s, height 0.3s;
+  }
+
+  /* Petals */
+  #petal-layer {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+    overflow: hidden;
+  }
+
+  .petal {
+    position: absolute;
+    border-radius: 60% 40% 55% 45% / 50% 60% 40% 50%;
+    animation: petalFall linear infinite;
+    opacity: 0;
+  }
+
+  @keyframes petalFall {
+    0%   { transform: translateY(-40px) rotate(0deg) translateX(0px); opacity: 0; }
+    5%   { opacity: 0.65; }
+    95%  { opacity: 0.4; }
+    100% { transform: translateY(102vh) rotate(400deg) translateX(30px); opacity: 0; }
+  }
+
+  /* Nav dot */
+  .nav-dots {
+    position: fixed;
+    right: 28px;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 100;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .nav-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--rose-light);
+    cursor: pointer;
+    transition: background 0.3s, transform 0.3s;
+  }
+  .nav-dot.active { background: var(--rose); transform: scale(1.6); }
+
+  /* Sections */
+  section {
+    position: relative;
+    z-index: 1;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 80px 24px;
+  }
+
+  /* ── SECTION 1: HERO ── */
+  #s1 {
+    background: var(--cream);
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .hero-tag {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 11px;
+    font-weight: 400;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: var(--muted-2);
+    margin-bottom: 28px;
+    opacity: 0;
+    animation: slideUp 1s 0.4s forwards;
+  }
+
+  .hero-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(52px, 12vw, 110px);
+    font-weight: 300;
+    line-height: 0.95;
+    color: var(--dark);
+    text-align: center;
+    opacity: 0;
+    animation: slideUp 1.2s 0.7s forwards;
+  }
+
+  .hero-name .italic { font-style: italic; color: var(--rose); }
+
+  .hero-divider {
+    width: 1px;
+    height: 60px;
+    background: linear-gradient(to bottom, var(--rose-light), transparent);
+    margin: 36px auto;
+    opacity: 0;
+    animation: fadeIn 1s 1.2s forwards;
+  }
+
+  .hero-sub {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 15px;
+    font-weight: 300;
+    color: var(--muted);
+    letter-spacing: 0.3px;
+    line-height: 1.7;
+    opacity: 0;
+    animation: slideUp 1s 1.4s forwards;
+  }
+
+  .scroll-cue {
+    margin-top: 70px;
+    opacity: 0;
+    animation: fadeIn 1s 2.2s forwards;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    color: var(--muted-2);
+  }
+  .scroll-cue span {
+    font-size: 10px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+  }
+  .scroll-line {
+    width: 1px;
+    height: 50px;
+    background: linear-gradient(to bottom, var(--rose-light), transparent);
+    animation: scrollPulse 2s infinite;
+  }
+  @keyframes scrollPulse {
+    0%, 100% { opacity: 0.3; }
+    50% { opacity: 1; }
+  }
+
+  /* ── SECTION 2: POEM ── */
+  #s2 { background: var(--cream-2); }
+
+  .poem-block {
+    max-width: 580px;
+    text-align: center;
+  }
+
+  .section-eyebrow {
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: var(--muted-2);
+    margin-bottom: 44px;
+    display: block;
+  }
+
+  .poem-line {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(20px, 3.5vw, 30px);
+    font-weight: 300;
+    color: var(--dark);
+    line-height: 1.65;
+    display: block;
+    margin-bottom: 4px;
+  }
+  .poem-line .rose { color: var(--rose); font-style: italic; }
+
+  .poem-rule {
+    width: 48px;
+    height: 1px;
+    background: var(--rose-pale);
+    margin: 32px auto;
+  }
+
+  .poem-prose {
+    font-size: 15px;
+    font-weight: 300;
+    color: var(--muted);
+    line-height: 1.95;
+  }
+  .poem-prose em { color: var(--rose); font-style: italic; }
+
+  /* ── SECTION 3: THE QUOTE ── */
+  #s3 {
+    background: var(--dark);
+    flex-direction: column;
+  }
+
+  .quote-wrap { max-width: 620px; text-align: center; }
+
+  .quote-ornament {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 80px;
+    color: var(--rose);
+    opacity: 0.2;
+    line-height: 1;
+    margin-bottom: -20px;
+    display: block;
+  }
+
+  .quote-text {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(24px, 4.5vw, 40px);
+    font-weight: 300;
+    font-style: italic;
+    color: #f5e0e8;
+    line-height: 1.5;
+    margin-bottom: 20px;
+  }
+
+  .quote-from {
+    font-size: 11px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--muted-2);
+    margin-bottom: 52px;
+  }
+
+  .quote-reaction {
+    font-size: clamp(15px, 2.5vw, 18px);
+    color: #d4b0bc;
+    font-weight: 300;
+    line-height: 1.9;
+  }
+  .quote-reaction strong { color: #f5e0e8; font-weight: 500; }
+
+  /* ── SECTION 4: VALORANT ── */
+  #s4 { background: var(--cream); }
+
+  .val-inner { max-width: 560px; text-align: center; }
+
+  .val-badge {
+    display: inline-block;
+    border: 1px solid var(--rose-light);
+    color: var(--rose);
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 6px 18px;
+    border-radius: 40px;
+    margin-bottom: 32px;
+  }
+
+  .val-heading {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(28px, 5vw, 48px);
+    font-weight: 300;
+    color: var(--dark);
+    margin-bottom: 28px;
+    line-height: 1.2;
+  }
+
+  .val-body {
+    font-size: 16px;
+    font-weight: 300;
+    color: var(--muted);
+    line-height: 1.95;
+  }
+  .val-body em {
+    color: var(--rose);
+    font-style: italic;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 19px;
+  }
+
+  /* ── SECTION 5: CLOSE ── */
+  #s5 {
+    background: linear-gradient(160deg, var(--rose-pale) 0%, var(--cream-2) 100%);
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .close-inner { max-width: 520px; }
+
+  .close-heading {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(32px, 6vw, 58px);
+    font-weight: 300;
+    line-height: 1.2;
+    color: var(--dark);
+    margin-bottom: 28px;
+  }
+  .close-heading em { color: var(--rose); font-style: italic; }
+
+  .close-body {
+    font-size: 15px;
+    font-weight: 300;
+    color: var(--muted);
+    line-height: 2;
+    margin-bottom: 40px;
+  }
+  .close-body em { font-style: italic; color: var(--dark-mid); }
+
+  .sig {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 26px;
+    font-style: italic;
+    font-weight: 300;
+    color: var(--rose);
+    margin-bottom: 44px;
+    display: block;
+  }
+
+  .btn {
+    display: inline-block;
+    padding: 15px 44px;
+    background: var(--rose);
+    color: #fff;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    border: none;
+    text-decoration: none;
+    border-radius: 2px;
+    cursor: none;
+    transition: background 0.3s, transform 0.2s, letter-spacing 0.3s;
+  }
+  .btn:hover {
+    background: #9c4a65;
+    transform: translateY(-3px);
+    letter-spacing: 3px;
+  }
+
+  .btn-caption {
+    display: block;
+    margin-top: 16px;
+    font-size: 11px;
+    color: var(--muted-2);
+    font-style: italic;
+  }
+
+  /* Peony illustration top-right */
+  .peony-deco {
+    position: absolute;
+    opacity: 0.06;
+    pointer-events: none;
+    right: -40px;
+    top: 40px;
+  }
+
+  /* Reveal animations */
+  .reveal {
+    opacity: 0;
+    transform: translateY(28px);
+    transition: opacity 0.9s ease, transform 0.9s ease;
+  }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+
+  @keyframes slideUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+  }
+
+  /* Mobile */
+  @media (max-width: 600px) {
+    .nav-dots { display: none; }
+    body { cursor: auto; }
+    .cursor, .cursor-ring { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<div id="petal-layer"></div>
+
+<nav class="nav-dots" id="navDots">
+  <div class="nav-dot active" onclick="scrollTo(0)"></div>
+  <div class="nav-dot" onclick="document.getElementById('s2').scrollIntoView({behavior:'smooth'})"></div>
+  <div class="nav-dot" onclick="document.getElementById('s3').scrollIntoView({behavior:'smooth'})"></div>
+  <div class="nav-dot" onclick="document.getElementById('s4').scrollIntoView({behavior:'smooth'})"></div>
+  <div class="nav-dot" onclick="document.getElementById('s5').scrollIntoView({behavior:'smooth'})"></div>
+</nav>
+
+<!-- SECTION 1: HERO -->
+<section id="s1">
+  <svg class="peony-deco" width="320" height="320" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <ellipse cx="100" cy="100" rx="50" ry="70" fill="#b85c78" transform="rotate(0 100 100)"/>
+    <ellipse cx="100" cy="100" rx="50" ry="70" fill="#b85c78" transform="rotate(45 100 100)"/>
+    <ellipse cx="100" cy="100" rx="50" ry="70" fill="#b85c78" transform="rotate(90 100 100)"/>
+    <ellipse cx="100" cy="100" rx="50" ry="70" fill="#b85c78" transform="rotate(135 100 100)"/>
+    <circle cx="100" cy="100" r="22" fill="#b85c78"/>
+  </svg>
+
+  <div>
+    <p class="hero-tag">a letter dressed as a website</p>
+    <h1 class="hero-name">
+      Maria<br>
+      <span class="italic">Eduarda</span>
+    </h1>
+    <div class="hero-divider"></div>
+    <p class="hero-sub">because you deserve the effort.<br>and i had a lot of feelings and no other outlet.</p>
+    <div class="scroll-cue">
+      <span>scroll</span>
+      <div class="scroll-line"></div>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION 2: POEM -->
+<section id="s2">
+  <div class="poem-block reveal">
+    <span class="section-eyebrow">on you</span>
+
+    <span class="poem-line">she carries peonies in her laugh —</span>
+    <span class="poem-line">pink and white, soft and <span class="rose">unbothered.</span></span>
+
+    <div class="poem-rule"></div>
+
+    <span class="poem-line">there is something about a woman</span>
+    <span class="poem-line">who plays the violin and still finds time</span>
+    <span class="poem-line">to teach the world how to be <span class="rose">a little kinder.</span></span>
+
+    <div class="poem-rule"></div>
+
+    <p class="poem-prose">
+      carioca at heart, curls that frame a smile<br>
+      that honestly should come with a warning label.<br>
+      the kind of person you meet and think:<br>
+      <em>oh. there you are.</em>
+    </p>
+  </div>
+</section>
+
+<!-- SECTION 3: THE QUOTE -->
+<section id="s3">
+  <div class="quote-wrap reveal">
+    <span class="quote-ornament">"</span>
+    <p class="quote-text">eu sou sapatona mano.</p>
+    <p class="quote-from">— Madu, casually dismantling me</p>
+
+    <p class="quote-reaction">
+      and i heard it. i processed it. i nodded respectfully.<br><br>
+      <strong>and then kept thinking about you anyway.</strong><br><br>
+      which probably says something about me.<br>
+      i'm not entirely sure what.<br>
+      but here i am. i made a whole website.
+    </p>
+  </div>
+</section>
+
+<!-- SECTION 4: VALORANT -->
+<section id="s4">
+  <div class="val-inner reveal">
+    <span class="val-badge">Yaki · Valorant</span>
+    <h2 class="val-heading">you clutch every round.</h2>
+    <p class="val-body">
+      full entry. no hesitation. last alive, still wins.<br>
+      you do that in everything, don't you?<br>
+      professor by day. destroyer by night.<br>
+      violin in one hand, probably a Phantom in the other.<br><br>
+      <em>the only round you haven't clutched<br>is this one right here.</em><br><br>
+      no pressure though. i'm patient.
+    </p>
+  </div>
+</section>
+
+<!-- SECTION 5: CLOSE -->
+<section id="s5">
+  <div class="close-inner reveal">
+    <h2 class="close-heading">
+      so, Madu.<br>
+      <em>what do you say?</em>
+    </h2>
+    <p class="close-body">
+      i built a whole website.<br>
+      i quoted your own words back at you.<br>
+      i referenced valorant. i used serif fonts.<br>
+      there are literally animated petals falling right now.<br><br>
+      <em>(this is either very charming or a little unhinged.<br>
+      probably both. honestly that's kind of on brand.)</em>
+    </p>
+    <span class="sig">— Tenório</span>
+    <a class="btn" href="https://wa.me/SEU_NUMERO_AQUI" target="_blank">
+      okay, i'm a little flattered 🌸
+    </a>
+    <span class="btn-caption">troca "SEU_NUMERO_AQUI" pelo seu número com DDI, ex: 5521999999999</span>
+  </div>
+</section>
+
+<script>
+  // Custom cursor
+  const cursor = document.getElementById('cursor');
+  const ring = document.getElementById('cursorRing');
+  let mx = 0, my = 0, rx = 0, ry = 0;
+
+  document.addEventListener('mousemove', e => {
+    mx = e.clientX; my = e.clientY;
+    cursor.style.left = mx + 'px';
+    cursor.style.top = my + 'px';
+  });
+
+  function animRing() {
+    rx += (mx - rx) * 0.12;
+    ry += (my - ry) * 0.12;
+    ring.style.left = rx + 'px';
+    ring.style.top = ry + 'px';
+    requestAnimationFrame(animRing);
+  }
+  animRing();
+
+  document.querySelectorAll('a, button, .btn, .nav-dot').forEach(el => {
+    el.addEventListener('mouseenter', () => {
+      cursor.style.width = '18px';
+      cursor.style.height = '18px';
+      ring.style.width = '52px';
+      ring.style.height = '52px';
+    });
+    el.addEventListener('mouseleave', () => {
+      cursor.style.width = '10px';
+      cursor.style.height = '10px';
+      ring.style.width = '36px';
+      ring.style.height = '36px';
+    });
+  });
+
+  // Petals
+  const layer = document.getElementById('petal-layer');
+  const petalColors = ['#fff0f5', '#fbd4e2', '#f0a8be', '#fce8f0', '#ffffff'];
+
+  function spawnPetal() {
+    const p = document.createElement('div');
+    p.className = 'petal';
+    const size = 7 + Math.random() * 13;
+    const left = Math.random() * 105;
+    const dur = 7 + Math.random() * 9;
+    const delay = Math.random() * 5;
+    const color = petalColors[Math.floor(Math.random() * petalColors.length)];
+    const skew = (Math.random() - 0.5) * 60;
+    p.style.cssText = `
+      left:${left}%;top:-30px;
+      width:${size}px;height:${size * 1.4}px;
+      background:${color};
+      animation-duration:${dur}s;
+      animation-delay:${delay}s;
+      transform:rotate(${skew}deg);
+    `;
+    layer.appendChild(p);
+    setTimeout(() => p.remove(), (dur + delay) * 1000 + 200);
+  }
+
+  for (let i = 0; i < 18; i++) setTimeout(spawnPetal, i * 350);
+  setInterval(spawnPetal, 700);
+
+  // Scroll reveals
+  const revealEls = document.querySelectorAll('.reveal');
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+  }, { threshold: 0.15 });
+  revealEls.forEach(el => obs.observe(el));
+
+  // Nav dots
+  const sections = ['s1','s2','s3','s4','s5'].map(id => document.getElementById(id));
+  const dots = document.querySelectorAll('.nav-dot');
+
+  window.addEventListener('scroll', () => {
+    const mid = window.scrollY + window.innerHeight / 2;
+    let active = 0;
+    sections.forEach((s, i) => {
+      if (s.offsetTop <= mid) active = i;
+    });
+    dots.forEach((d, i) => d.classList.toggle('active', i === active));
+  });
+</script>
+</body>
+</html>
