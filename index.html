@@ -3,61 +3,62 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>for madu.</title>
+<title>maria.</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Jost:wght@200;300;400;500&display=swap" rel="stylesheet">
 <style>
   *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
   :root {
-    --rose: #b85c78;
-    --rose-light: #e8a0b4;
-    --rose-pale: #f5e0e8;
-    --cream: #fdf6f0;
-    --cream-2: #fff8fb;
-    --dark: #2d1f29;
-    --dark-mid: #4a2e3c;
-    --muted: #8a6572;
-    --muted-2: #c9839a;
+    --ink: #1a1018;
+    --rose: #c0687e;
+    --rose-dim: #e8b4bf;
+    --rose-pale: #fdf0f3;
+    --cream: #faf7f4;
+    --warm: #f2e8e0;
+    --muted: #8c6b74;
+    --muted-2: #c4a0a8;
   }
 
-  html { scroll-behavior: smooth; }
-
-  body {
+  html, body {
+    height: 100%;
     background: var(--cream);
-    font-family: 'DM Sans', sans-serif;
-    color: var(--dark);
-    overflow-x: hidden;
-    cursor: none;
+    font-family: 'Jost', sans-serif;
+    color: var(--ink);
+    overflow: hidden;
   }
 
-  /* Custom cursor */
-  .cursor {
+  /* ── NOISE GRAIN ── */
+  body::after {
+    content: '';
     position: fixed;
-    width: 10px;
-    height: 10px;
-    background: var(--rose);
-    border-radius: 50%;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
     pointer-events: none;
     z-index: 9999;
-    transform: translate(-50%, -50%);
-    transition: transform 0.1s, width 0.3s, height 0.3s, background 0.3s;
-  }
-  .cursor-ring {
-    position: fixed;
-    width: 36px;
-    height: 36px;
-    border: 1px solid var(--rose-light);
-    border-radius: 50%;
-    pointer-events: none;
-    z-index: 9998;
-    transform: translate(-50%, -50%);
-    transition: transform 0.15s ease, width 0.3s, height 0.3s;
+    opacity: 0.5;
   }
 
-  /* Petals */
-  #petal-layer {
+  /* ── PAGES ── */
+  .page {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 24px;
+    transition: opacity 0.8s ease, transform 0.8s ease;
+  }
+
+  .page.hidden {
+    opacity: 0;
+    pointer-events: none;
+    transform: scale(0.97);
+  }
+
+  /* ── FLOATING PETALS ── */
+  #petals {
     position: fixed;
     inset: 0;
     pointer-events: none;
@@ -68,561 +69,670 @@
   .petal {
     position: absolute;
     border-radius: 60% 40% 55% 45% / 50% 60% 40% 50%;
-    animation: petalFall linear infinite;
+    animation: petalDrift linear infinite;
     opacity: 0;
   }
 
-  @keyframes petalFall {
-    0%   { transform: translateY(-40px) rotate(0deg) translateX(0px); opacity: 0; }
-    5%   { opacity: 0.65; }
-    95%  { opacity: 0.4; }
-    100% { transform: translateY(102vh) rotate(400deg) translateX(30px); opacity: 0; }
+  @keyframes petalDrift {
+    0%   { transform: translateY(-30px) rotate(0deg) translateX(0); opacity: 0; }
+    8%   { opacity: 0.55; }
+    92%  { opacity: 0.3; }
+    100% { transform: translateY(105vh) rotate(380deg) translateX(25px); opacity: 0; }
   }
 
-  /* Nav dot */
-  .nav-dots {
-    position: fixed;
-    right: 28px;
-    top: 50%;
-    transform: translateY(-50%);
-    z-index: 100;
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-  }
-  .nav-dot {
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
-    background: var(--rose-light);
-    cursor: pointer;
-    transition: background 0.3s, transform 0.3s;
-  }
-  .nav-dot.active { background: var(--rose); transform: scale(1.6); }
+  /* ── PAGE 1: DATING ── */
+  #p1 { background: var(--cream); z-index: 1; }
 
-  /* Sections */
-  section {
+  .card {
     position: relative;
-    z-index: 1;
-    min-height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 80px 24px;
-  }
-
-  /* ── SECTION 1: HERO ── */
-  #s1 {
-    background: var(--cream);
-    flex-direction: column;
+    max-width: 520px;
+    width: 100%;
     text-align: center;
+    z-index: 2;
   }
 
-  .hero-tag {
-    font-family: 'DM Sans', sans-serif;
-    font-size: 11px;
+  .eyebrow {
+    font-size: 10px;
     font-weight: 400;
-    letter-spacing: 4px;
+    letter-spacing: 5px;
     text-transform: uppercase;
     color: var(--muted-2);
-    margin-bottom: 28px;
-    opacity: 0;
-    animation: slideUp 1s 0.4s forwards;
-  }
-
-  .hero-name {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: clamp(52px, 12vw, 110px);
-    font-weight: 300;
-    line-height: 0.95;
-    color: var(--dark);
-    text-align: center;
-    opacity: 0;
-    animation: slideUp 1.2s 0.7s forwards;
-  }
-
-  .hero-name .italic { font-style: italic; color: var(--rose); }
-
-  .hero-divider {
-    width: 1px;
-    height: 60px;
-    background: linear-gradient(to bottom, var(--rose-light), transparent);
-    margin: 36px auto;
-    opacity: 0;
-    animation: fadeIn 1s 1.2s forwards;
-  }
-
-  .hero-sub {
-    font-family: 'DM Sans', sans-serif;
-    font-size: 15px;
-    font-weight: 300;
-    color: var(--muted);
-    letter-spacing: 0.3px;
-    line-height: 1.7;
-    opacity: 0;
-    animation: slideUp 1s 1.4s forwards;
-  }
-
-  .scroll-cue {
-    margin-top: 70px;
-    opacity: 0;
-    animation: fadeIn 1s 2.2s forwards;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 10px;
-    color: var(--muted-2);
-  }
-  .scroll-cue span {
-    font-size: 10px;
-    letter-spacing: 3px;
-    text-transform: uppercase;
-  }
-  .scroll-line {
-    width: 1px;
-    height: 50px;
-    background: linear-gradient(to bottom, var(--rose-light), transparent);
-    animation: scrollPulse 2s infinite;
-  }
-  @keyframes scrollPulse {
-    0%, 100% { opacity: 0.3; }
-    50% { opacity: 1; }
-  }
-
-  /* ── SECTION 2: POEM ── */
-  #s2 { background: var(--cream-2); }
-
-  .poem-block {
-    max-width: 580px;
-    text-align: center;
-  }
-
-  .section-eyebrow {
-    font-size: 10px;
-    font-weight: 500;
-    letter-spacing: 4px;
-    text-transform: uppercase;
-    color: var(--muted-2);
-    margin-bottom: 44px;
-    display: block;
-  }
-
-  .poem-line {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: clamp(20px, 3.5vw, 30px);
-    font-weight: 300;
-    color: var(--dark);
-    line-height: 1.65;
-    display: block;
-    margin-bottom: 4px;
-  }
-  .poem-line .rose { color: var(--rose); font-style: italic; }
-
-  .poem-rule {
-    width: 48px;
-    height: 1px;
-    background: var(--rose-pale);
-    margin: 32px auto;
-  }
-
-  .poem-prose {
-    font-size: 15px;
-    font-weight: 300;
-    color: var(--muted);
-    line-height: 1.95;
-  }
-  .poem-prose em { color: var(--rose); font-style: italic; }
-
-  /* ── SECTION 3: THE QUOTE ── */
-  #s3 {
-    background: var(--dark);
-    flex-direction: column;
-  }
-
-  .quote-wrap { max-width: 620px; text-align: center; }
-
-  .quote-ornament {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 80px;
-    color: var(--rose);
-    opacity: 0.2;
-    line-height: 1;
-    margin-bottom: -20px;
-    display: block;
-  }
-
-  .quote-text {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: clamp(24px, 4.5vw, 40px);
-    font-weight: 300;
-    font-style: italic;
-    color: #f5e0e8;
-    line-height: 1.5;
-    margin-bottom: 20px;
-  }
-
-  .quote-from {
-    font-size: 11px;
-    letter-spacing: 3px;
-    text-transform: uppercase;
-    color: var(--muted-2);
-    margin-bottom: 52px;
-  }
-
-  .quote-reaction {
-    font-size: clamp(15px, 2.5vw, 18px);
-    color: #d4b0bc;
-    font-weight: 300;
-    line-height: 1.9;
-  }
-  .quote-reaction strong { color: #f5e0e8; font-weight: 500; }
-
-  /* ── SECTION 4: VALORANT ── */
-  #s4 { background: var(--cream); }
-
-  .val-inner { max-width: 560px; text-align: center; }
-
-  .val-badge {
-    display: inline-block;
-    border: 1px solid var(--rose-light);
-    color: var(--rose);
-    font-size: 11px;
-    font-weight: 500;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    padding: 6px 18px;
-    border-radius: 40px;
     margin-bottom: 32px;
-  }
-
-  .val-heading {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: clamp(28px, 5vw, 48px);
-    font-weight: 300;
-    color: var(--dark);
-    margin-bottom: 28px;
-    line-height: 1.2;
-  }
-
-  .val-body {
-    font-size: 16px;
-    font-weight: 300;
-    color: var(--muted);
-    line-height: 1.95;
-  }
-  .val-body em {
-    color: var(--rose);
-    font-style: italic;
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 19px;
-  }
-
-  /* ── SECTION 5: CLOSE ── */
-  #s5 {
-    background: linear-gradient(160deg, var(--rose-pale) 0%, var(--cream-2) 100%);
-    flex-direction: column;
-    text-align: center;
-  }
-
-  .close-inner { max-width: 520px; }
-
-  .close-heading {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: clamp(32px, 6vw, 58px);
-    font-weight: 300;
-    line-height: 1.2;
-    color: var(--dark);
-    margin-bottom: 28px;
-  }
-  .close-heading em { color: var(--rose); font-style: italic; }
-
-  .close-body {
-    font-size: 15px;
-    font-weight: 300;
-    color: var(--muted);
-    line-height: 2;
-    margin-bottom: 40px;
-  }
-  .close-body em { font-style: italic; color: var(--dark-mid); }
-
-  .sig {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 26px;
-    font-style: italic;
-    font-weight: 300;
-    color: var(--rose);
-    margin-bottom: 44px;
     display: block;
+    opacity: 0;
+    animation: riseIn 0.9s 0.3s forwards;
   }
 
-  .btn {
-    display: inline-block;
-    padding: 15px 44px;
+  .main-name {
+    font-family: 'Libre Baskerville', serif;
+    font-size: clamp(56px, 14vw, 108px);
+    font-weight: 400;
+    font-style: italic;
+    color: var(--ink);
+    line-height: 1;
+    margin-bottom: 8px;
+    opacity: 0;
+    animation: riseIn 1.1s 0.6s forwards;
+  }
+
+  .main-name .accent { color: var(--rose); }
+
+  .rule {
+    width: 1px;
+    height: 56px;
+    background: linear-gradient(to bottom, var(--rose-dim), transparent);
+    margin: 28px auto;
+    opacity: 0;
+    animation: fadeIn 1s 1s forwards;
+  }
+
+  .body-text {
+    font-size: clamp(15px, 2.5vw, 17px);
+    font-weight: 300;
+    color: var(--muted);
+    line-height: 1.9;
+    margin-bottom: 10px;
+    opacity: 0;
+    animation: riseIn 0.9s 1.2s forwards;
+  }
+
+  .body-text em {
+    font-family: 'Libre Baskerville', serif;
+    font-style: italic;
+    color: var(--ink);
+    font-size: 1.05em;
+  }
+
+  .body-small {
+    font-size: 13px;
+    font-weight: 300;
+    color: var(--muted-2);
+    line-height: 1.8;
+    margin-bottom: 44px;
+    font-style: italic;
+    opacity: 0;
+    animation: riseIn 0.9s 1.5s forwards;
+  }
+
+  .ask-line {
+    font-family: 'Libre Baskerville', serif;
+    font-size: clamp(20px, 3.5vw, 26px);
+    font-weight: 400;
+    color: var(--ink);
+    margin-bottom: 36px;
+    line-height: 1.4;
+    opacity: 0;
+    animation: riseIn 0.9s 1.8s forwards;
+  }
+
+  .ask-line span { color: var(--rose); font-style: italic; }
+
+  .btn-row {
+    display: flex;
+    gap: 16px;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    opacity: 0;
+    animation: riseIn 0.9s 2.1s forwards;
+  }
+
+  .btn-yes {
+    padding: 13px 44px;
     background: var(--rose);
     color: #fff;
-    font-family: 'DM Sans', sans-serif;
-    font-size: 12px;
+    font-family: 'Jost', sans-serif;
+    font-size: 13px;
     font-weight: 500;
     letter-spacing: 2px;
     text-transform: uppercase;
     border: none;
-    text-decoration: none;
     border-radius: 2px;
-    cursor: none;
+    cursor: pointer;
     transition: background 0.3s, transform 0.2s, letter-spacing 0.3s;
   }
-  .btn:hover {
-    background: #9c4a65;
-    transform: translateY(-3px);
-    letter-spacing: 3px;
-  }
+  .btn-yes:hover { background: #a8536a; transform: translateY(-2px); letter-spacing: 3px; }
 
-  .btn-caption {
-    display: block;
-    margin-top: 16px;
-    font-size: 11px;
-    color: var(--muted-2);
+  .btn-no {
+    padding: 13px 44px;
+    background: transparent;
+    color: var(--muted);
+    font-family: 'Jost', sans-serif;
+    font-size: 13px;
+    font-weight: 400;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    border: 1px solid var(--rose-dim);
+    border-radius: 2px;
+    cursor: pointer;
+    transition: all 0.25s;
+    position: relative;
+  }
+  .btn-no:hover { color: var(--rose); border-color: var(--rose); }
+
+  /* ── SIGNATURE ── */
+  .sig {
+    margin-top: 48px;
+    font-family: 'Libre Baskerville', serif;
+    font-size: 15px;
     font-style: italic;
-  }
-
-  /* Peony illustration top-right */
-  .peony-deco {
-    position: absolute;
-    opacity: 0.06;
-    pointer-events: none;
-    right: -40px;
-    top: 40px;
-  }
-
-  /* Reveal animations */
-  .reveal {
+    color: var(--muted-2);
     opacity: 0;
-    transform: translateY(28px);
-    transition: opacity 0.9s ease, transform 0.9s ease;
+    animation: fadeIn 0.9s 2.5s forwards;
   }
-  .reveal.visible { opacity: 1; transform: translateY(0); }
 
-  @keyframes slideUp {
-    from { opacity: 0; transform: translateY(20px); }
+  /* ── PAGE 2: MARRIAGE OVERLAY ── */
+  #p2 {
+    background: var(--ink);
+    z-index: 10;
+    flex-direction: column;
+  }
+
+  .m-card {
+    max-width: 540px;
+    width: 100%;
+    text-align: center;
+    z-index: 2;
+    position: relative;
+  }
+
+  .m-eyebrow {
+    font-size: 10px;
+    letter-spacing: 5px;
+    text-transform: uppercase;
+    color: var(--muted-2);
+    margin-bottom: 28px;
+    display: block;
+    opacity: 0;
+    animation: riseIn 0.8s 0.2s forwards;
+  }
+
+  .m-title {
+    font-family: 'Libre Baskerville', serif;
+    font-size: clamp(38px, 9vw, 78px);
+    font-weight: 400;
+    font-style: italic;
+    color: #fdf0f3;
+    line-height: 1.1;
+    margin-bottom: 12px;
+    opacity: 0;
+    animation: riseIn 1s 0.4s forwards;
+  }
+
+  .m-title .gold { color: var(--rose-dim); }
+
+  .m-rule {
+    width: 1px;
+    height: 50px;
+    background: linear-gradient(to bottom, var(--rose), transparent);
+    margin: 24px auto;
+    opacity: 0;
+    animation: fadeIn 0.8s 0.9s forwards;
+  }
+
+  .m-body {
+    font-size: clamp(14px, 2.5vw, 16px);
+    font-weight: 300;
+    color: #c4a0a8;
+    line-height: 2;
+    margin-bottom: 12px;
+    opacity: 0;
+    animation: riseIn 0.9s 1.1s forwards;
+  }
+  .m-body em {
+    font-family: 'Libre Baskerville', serif;
+    font-style: italic;
+    color: #fdf0f3;
+  }
+
+  .m-small {
+    font-size: 12px;
+    color: #7a5560;
+    font-style: italic;
+    margin-bottom: 40px;
+    line-height: 1.8;
+    opacity: 0;
+    animation: riseIn 0.9s 1.4s forwards;
+  }
+
+  .m-ask {
+    font-family: 'Libre Baskerville', serif;
+    font-size: clamp(18px, 3vw, 24px);
+    color: #fdf0f3;
+    margin-bottom: 36px;
+    line-height: 1.5;
+    opacity: 0;
+    animation: riseIn 0.9s 1.7s forwards;
+  }
+  .m-ask span { color: var(--rose-dim); font-style: italic; }
+
+  .m-btn-row {
+    display: flex;
+    gap: 16px;
+    justify-content: center;
+    flex-wrap: wrap;
+    opacity: 0;
+    animation: riseIn 0.9s 2s forwards;
+  }
+
+  .m-btn-yes {
+    padding: 13px 44px;
+    background: var(--rose-dim);
+    color: var(--ink);
+    font-family: 'Jost', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    border: none;
+    border-radius: 2px;
+    cursor: pointer;
+    transition: background 0.3s, transform 0.2s;
+  }
+  .m-btn-yes:hover { background: #f5d5e0; transform: translateY(-2px); }
+
+  .m-btn-wait {
+    padding: 13px 36px;
+    background: transparent;
+    color: #7a5560;
+    font-family: 'Jost', sans-serif;
+    font-size: 13px;
+    font-weight: 400;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    border: 1px solid #3d2530;
+    border-radius: 2px;
+    cursor: pointer;
+    transition: all 0.25s;
+  }
+  .m-btn-wait:hover { color: var(--rose-dim); border-color: var(--rose); }
+
+  .m-sig {
+    margin-top: 44px;
+    font-family: 'Libre Baskerville', serif;
+    font-size: 15px;
+    font-style: italic;
+    color: #3d2530;
+    opacity: 0;
+    animation: fadeIn 0.9s 2.4s forwards;
+  }
+
+  /* ── PAGE 3: FINAL ── */
+  #p3 {
+    background: var(--rose-pale);
+    z-index: 20;
+    flex-direction: column;
+  }
+
+  .f-card {
+    max-width: 480px;
+    width: 100%;
+    text-align: center;
+    z-index: 2;
+  }
+
+  .f-emoji {
+    font-size: 48px;
+    margin-bottom: 24px;
+    display: block;
+    opacity: 0;
+    animation: popIn 0.6s 0.3s forwards;
+  }
+
+  .f-title {
+    font-family: 'Libre Baskerville', serif;
+    font-size: clamp(32px, 7vw, 60px);
+    font-weight: 400;
+    font-style: italic;
+    color: var(--ink);
+    line-height: 1.1;
+    margin-bottom: 24px;
+    opacity: 0;
+    animation: riseIn 0.9s 0.5s forwards;
+  }
+
+  .f-title span { color: var(--rose); }
+
+  .f-body {
+    font-size: 15px;
+    font-weight: 300;
+    color: var(--muted);
+    line-height: 1.95;
+    margin-bottom: 40px;
+    opacity: 0;
+    animation: riseIn 0.9s 0.9s forwards;
+  }
+
+  .f-contact {
+    opacity: 0;
+    animation: riseIn 0.9s 1.3s forwards;
+  }
+
+  .f-contact a {
+    display: inline-block;
+    padding: 13px 44px;
+    background: var(--rose);
+    color: #fff;
+    font-family: 'Jost', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    border-radius: 2px;
+    text-decoration: none;
+    transition: background 0.3s, transform 0.2s;
+  }
+  .f-contact a:hover { background: #a8536a; transform: translateY(-2px); }
+
+  .f-sig {
+    margin-top: 40px;
+    font-family: 'Libre Baskerville', serif;
+    font-size: 15px;
+    font-style: italic;
+    color: var(--muted-2);
+    opacity: 0;
+    animation: fadeIn 0.9s 1.8s forwards;
+    display: block;
+  }
+
+  /* ── CONFETTI ── */
+  .confetti-piece {
+    position: fixed;
+    width: 8px;
+    height: 8px;
+    border-radius: 1px;
+    pointer-events: none;
+    z-index: 50;
+    animation: confettiFall linear forwards;
+    opacity: 0;
+  }
+  @keyframes confettiFall {
+    0%   { transform: translateY(-20px) rotate(0deg); opacity: 1; }
+    100% { transform: translateY(110vh) rotate(720deg); opacity: 0; }
+  }
+
+  /* ── RING ANIMATION ── */
+  .ring-svg {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+    animation: ringFloat 4s ease-in-out infinite;
+  }
+  @keyframes ringFloat {
+    0%, 100% { transform: translateY(0px) rotate(-8deg); }
+    50% { transform: translateY(-10px) rotate(8deg); }
+  }
+
+  /* ── KEYFRAMES ── */
+  @keyframes riseIn {
+    from { opacity: 0; transform: translateY(18px); }
     to   { opacity: 1; transform: translateY(0); }
   }
   @keyframes fadeIn {
     from { opacity: 0; }
     to   { opacity: 1; }
   }
+  @keyframes popIn {
+    0%   { opacity: 0; transform: scale(0.4) rotate(-20deg); }
+    70%  { transform: scale(1.2) rotate(5deg); }
+    100% { opacity: 1; transform: scale(1) rotate(0deg); }
+  }
 
-  /* Mobile */
-  @media (max-width: 600px) {
-    .nav-dots { display: none; }
-    body { cursor: auto; }
-    .cursor, .cursor-ring { display: none; }
+  /* ── TRANSITION OVERLAY ── */
+  #overlay {
+    position: fixed;
+    inset: 0;
+    background: var(--ink);
+    z-index: 100;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.5s ease;
+  }
+  #overlay.active { opacity: 1; pointer-events: all; }
+
+  /* mobile */
+  @media (max-width: 500px) {
+    .btn-row, .m-btn-row { flex-direction: column; align-items: center; }
+    .btn-yes, .btn-no, .m-btn-yes, .m-btn-wait { width: 100%; max-width: 260px; }
   }
 </style>
 </head>
 <body>
 
-<div class="cursor" id="cursor"></div>
-<div class="cursor-ring" id="cursorRing"></div>
+<div id="overlay"></div>
+<div id="petals"></div>
 
-<div id="petal-layer"></div>
+<!-- ══════════════════════════════════
+     PAGE 1 — DATING PROPOSAL
+═══════════════════════════════════ -->
+<div class="page" id="p1">
+  <div class="card">
 
-<nav class="nav-dots" id="navDots">
-  <div class="nav-dot active" onclick="scrollTo(0)"></div>
-  <div class="nav-dot" onclick="document.getElementById('s2').scrollIntoView({behavior:'smooth'})"></div>
-  <div class="nav-dot" onclick="document.getElementById('s3').scrollIntoView({behavior:'smooth'})"></div>
-  <div class="nav-dot" onclick="document.getElementById('s4').scrollIntoView({behavior:'smooth'})"></div>
-  <div class="nav-dot" onclick="document.getElementById('s5').scrollIntoView({behavior:'smooth'})"></div>
-</nav>
+    <span class="eyebrow">a modest proposition</span>
 
-<!-- SECTION 1: HERO -->
-<section id="s1">
-  <svg class="peony-deco" width="320" height="320" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <ellipse cx="100" cy="100" rx="50" ry="70" fill="#b85c78" transform="rotate(0 100 100)"/>
-    <ellipse cx="100" cy="100" rx="50" ry="70" fill="#b85c78" transform="rotate(45 100 100)"/>
-    <ellipse cx="100" cy="100" rx="50" ry="70" fill="#b85c78" transform="rotate(90 100 100)"/>
-    <ellipse cx="100" cy="100" rx="50" ry="70" fill="#b85c78" transform="rotate(135 100 100)"/>
-    <circle cx="100" cy="100" r="22" fill="#b85c78"/>
+    <h1 class="main-name">
+      Mari<span class="accent">a</span><span style="color:var(--rose);">.</span>
+    </h1>
+
+    <div class="rule"></div>
+
+    <p class="body-text">
+      i've been thinking about this for a while.<br>
+      <em>a while</em> meaning since the moment i met you,<br>
+      give or take a few moments of denial.
+    </p>
+
+    <p class="body-small">
+      (the denial didn't last long. you make it very difficult.)
+    </p>
+
+    <p class="ask-line">
+      would you do me the enormous honor<br>
+      of being <span>my girlfriend?</span>
+    </p>
+
+    <div class="btn-row">
+      <button class="btn-yes" id="yesDate" onclick="handleYesDate()">yes 🌸</button>
+      <button class="btn-no" id="noDate" onmouseover="runAway(this)" onclick="runAway(this)">no</button>
+    </div>
+
+    <p class="sig">— Tenório</p>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════
+     PAGE 2 — MARRIAGE PROPOSAL
+═══════════════════════════════════ -->
+<div class="page hidden" id="p2">
+
+  <!-- floating ring decoration -->
+  <svg class="ring-svg" style="top:12%;right:8%;opacity:0.12;animation-delay:0s;" width="60" height="60" viewBox="0 0 60 60" fill="none">
+    <circle cx="30" cy="30" r="22" stroke="#e8b4bf" stroke-width="4"/>
+    <circle cx="30" cy="30" r="14" stroke="#e8b4bf" stroke-width="1.5"/>
+    <circle cx="30" cy="12" r="5" fill="#c0687e" opacity="0.6"/>
   </svg>
 
-  <div>
-    <p class="hero-tag">a letter dressed as a website</p>
-    <h1 class="hero-name">
-      Maria<br>
-      <span class="italic">Eduarda</span>
-    </h1>
-    <div class="hero-divider"></div>
-    <p class="hero-sub">because you deserve the effort.<br>and i had a lot of feelings and no other outlet.</p>
-    <div class="scroll-cue">
-      <span>scroll</span>
-      <div class="scroll-line"></div>
-    </div>
-  </div>
-</section>
+  <svg class="ring-svg" style="bottom:15%;left:6%;opacity:0.08;animation-delay:2s;" width="44" height="44" viewBox="0 0 60 60" fill="none">
+    <circle cx="30" cy="30" r="22" stroke="#e8b4bf" stroke-width="4"/>
+    <circle cx="30" cy="12" r="5" fill="#c0687e" opacity="0.6"/>
+  </svg>
 
-<!-- SECTION 2: POEM -->
-<section id="s2">
-  <div class="poem-block reveal">
-    <span class="section-eyebrow">on you</span>
+  <div class="m-card">
 
-    <span class="poem-line">she carries peonies in her laugh —</span>
-    <span class="poem-line">pink and white, soft and <span class="rose">unbothered.</span></span>
+    <span class="m-eyebrow">wait. one more thing.</span>
 
-    <div class="poem-rule"></div>
-
-    <span class="poem-line">there is something about a woman</span>
-    <span class="poem-line">who plays the violin and still finds time</span>
-    <span class="poem-line">to teach the world how to be <span class="rose">a little kinder.</span></span>
-
-    <div class="poem-rule"></div>
-
-    <p class="poem-prose">
-      carioca at heart, curls that frame a smile<br>
-      that honestly should come with a warning label.<br>
-      the kind of person you meet and think:<br>
-      <em>oh. there you are.</em>
-    </p>
-  </div>
-</section>
-
-<!-- SECTION 3: THE QUOTE -->
-<section id="s3">
-  <div class="quote-wrap reveal">
-    <span class="quote-ornament">"</span>
-    <p class="quote-text">eu sou sapatona mano.</p>
-    <p class="quote-from">— Madu, casually dismantling me</p>
-
-    <p class="quote-reaction">
-      and i heard it. i processed it. i nodded respectfully.<br><br>
-      <strong>and then kept thinking about you anyway.</strong><br><br>
-      which probably says something about me.<br>
-      i'm not entirely sure what.<br>
-      but here i am. i made a whole website.
-    </p>
-  </div>
-</section>
-
-<!-- SECTION 4: VALORANT -->
-<section id="s4">
-  <div class="val-inner reveal">
-    <span class="val-badge">Yaki · Valorant</span>
-    <h2 class="val-heading">you clutch every round.</h2>
-    <p class="val-body">
-      full entry. no hesitation. last alive, still wins.<br>
-      you do that in everything, don't you?<br>
-      professor by day. destroyer by night.<br>
-      violin in one hand, probably a Phantom in the other.<br><br>
-      <em>the only round you haven't clutched<br>is this one right here.</em><br><br>
-      no pressure though. i'm patient.
-    </p>
-  </div>
-</section>
-
-<!-- SECTION 5: CLOSE -->
-<section id="s5">
-  <div class="close-inner reveal">
-    <h2 class="close-heading">
-      so, Madu.<br>
-      <em>what do you say?</em>
+    <h2 class="m-title">
+      while we're<br>at it<span class="gold">,</span>
     </h2>
-    <p class="close-body">
-      i built a whole website.<br>
-      i quoted your own words back at you.<br>
-      i referenced valorant. i used serif fonts.<br>
-      there are literally animated petals falling right now.<br><br>
-      <em>(this is either very charming or a little unhinged.<br>
-      probably both. honestly that's kind of on brand.)</em>
+
+    <div class="m-rule"></div>
+
+    <p class="m-body">
+      okay so i know what you're thinking.<br>
+      <em>"we just started dating, Tenório."</em><br>
+      and you're right. technically.
     </p>
-    <span class="sig">— Tenório</span>
-    <a class="btn" href="https://wa.me/+5511979915896" target="_blank">
-      okay, i'm a little flattered 🌸
-    </a>
-    </spa></span>
+
+    <p class="m-small">
+      but hear me out. i've thought about this for approximately<br>
+      the same amount of time as the last question. so, yes.
+    </p>
+
+    <p class="m-ask">
+      Maria — would you,<br>
+      eventually, someday, perhaps,<br>
+      <span>marry me too?</span>
+    </p>
+
+    <div class="m-btn-row">
+      <button class="m-btn-yes" onclick="handleYesMarriage()">yes (obviously) 💍</button>
+      <button class="m-btn-wait" onclick="handleWait()">let's revisit this</button>
+    </div>
+
+    <p class="m-sig">— still Tenório, yes</p>
+
   </div>
-</section>
+</div>
+
+<!-- ══════════════════════════════════
+     PAGE 3 — HAPPY ENDING
+═══════════════════════════════════ -->
+<div class="page hidden" id="p3">
+  <div class="f-card">
+
+    <span class="f-emoji" id="finalEmoji">🌸</span>
+
+    <h2 class="f-title" id="finalTitle">
+      she said<br><span>yes.</span>
+    </h2>
+
+    <p class="f-body" id="finalBody">
+      and just like that, my whole plan worked.<br>
+      which is insane. but here we are.<br><br>
+      thank you for being exactly who you are, Maria.<br>
+      i really, genuinely mean that.
+    </p>
+
+    <div class="f-contact">
+      <a href="https://wa.me/SEU_NUMERO_AQUI" target="_blank">come find me 🌹</a>
+    </div>
+
+    <span class="f-sig">— Tenório</span>
+
+  </div>
+</div>
 
 <script>
-  // Custom cursor
-  const cursor = document.getElementById('cursor');
-  const ring = document.getElementById('cursorRing');
-  let mx = 0, my = 0, rx = 0, ry = 0;
-
-  document.addEventListener('mousemove', e => {
-    mx = e.clientX; my = e.clientY;
-    cursor.style.left = mx + 'px';
-    cursor.style.top = my + 'px';
-  });
-
-  function animRing() {
-    rx += (mx - rx) * 0.12;
-    ry += (my - ry) * 0.12;
-    ring.style.left = rx + 'px';
-    ring.style.top = ry + 'px';
-    requestAnimationFrame(animRing);
-  }
-  animRing();
-
-  document.querySelectorAll('a, button, .btn, .nav-dot').forEach(el => {
-    el.addEventListener('mouseenter', () => {
-      cursor.style.width = '18px';
-      cursor.style.height = '18px';
-      ring.style.width = '52px';
-      ring.style.height = '52px';
-    });
-    el.addEventListener('mouseleave', () => {
-      cursor.style.width = '10px';
-      cursor.style.height = '10px';
-      ring.style.width = '36px';
-      ring.style.height = '36px';
-    });
-  });
-
-  // Petals
-  const layer = document.getElementById('petal-layer');
-  const petalColors = ['#fff0f5', '#fbd4e2', '#f0a8be', '#fce8f0', '#ffffff'];
+  // ── PETALS ──
+  const layer = document.getElementById('petals');
+  const colors = ['#fce8f0','#f5d0de','#fff4f7','#e8c4d0','#ffffff'];
 
   function spawnPetal() {
     const p = document.createElement('div');
     p.className = 'petal';
-    const size = 7 + Math.random() * 13;
-    const left = Math.random() * 105;
+    const sz = 6 + Math.random() * 12;
     const dur = 7 + Math.random() * 9;
-    const delay = Math.random() * 5;
-    const color = petalColors[Math.floor(Math.random() * petalColors.length)];
-    const skew = (Math.random() - 0.5) * 60;
+    const delay = Math.random() * 6;
     p.style.cssText = `
-      left:${left}%;top:-30px;
-      width:${size}px;height:${size * 1.4}px;
-      background:${color};
+      left:${Math.random()*105}%;
+      top:-20px;
+      width:${sz}px;
+      height:${sz*1.4}px;
+      background:${colors[Math.floor(Math.random()*colors.length)]};
       animation-duration:${dur}s;
       animation-delay:${delay}s;
-      transform:rotate(${skew}deg);
+      transform:rotate(${(Math.random()-0.5)*60}deg);
     `;
     layer.appendChild(p);
-    setTimeout(() => p.remove(), (dur + delay) * 1000 + 200);
+    setTimeout(() => p.remove(), (dur + delay) * 1000 + 300);
   }
 
-  for (let i = 0; i < 18; i++) setTimeout(spawnPetal, i * 350);
-  setInterval(spawnPetal, 700);
+  for (let i = 0; i < 16; i++) setTimeout(spawnPetal, i * 380);
+  setInterval(spawnPetal, 750);
 
-  // Scroll reveals
-  const revealEls = document.querySelectorAll('.reveal');
-  const obs = new IntersectionObserver(entries => {
-    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
-  }, { threshold: 0.15 });
-  revealEls.forEach(el => obs.observe(el));
+  // ── RUNAWAY NO BUTTON ──
+  function runAway(el) {
+    const vw = window.innerWidth - 140;
+    const vh = window.innerHeight - 60;
+    const x = Math.random() * vw;
+    const y = Math.random() * vh;
+    el.style.position = 'fixed';
+    el.style.left = x + 'px';
+    el.style.top = y + 'px';
+    el.style.zIndex = '500';
+    el.style.transition = 'left 0.3s, top 0.3s';
+  }
 
-  // Nav dots
-  const sections = ['s1','s2','s3','s4','s5'].map(id => document.getElementById(id));
-  const dots = document.querySelectorAll('.nav-dot');
+  // ── TRANSITION ──
+  const overlay = document.getElementById('overlay');
 
-  window.addEventListener('scroll', () => {
-    const mid = window.scrollY + window.innerHeight / 2;
-    let active = 0;
-    sections.forEach((s, i) => {
-      if (s.offsetTop <= mid) active = i;
+  function transitionTo(fromId, toId, cb) {
+    overlay.classList.add('active');
+    setTimeout(() => {
+      document.getElementById(fromId).classList.add('hidden');
+      document.getElementById(toId).classList.remove('hidden');
+      if (cb) cb();
+      setTimeout(() => overlay.classList.remove('active'), 100);
+    }, 500);
+  }
+
+  // ── PAGE 1 YES ──
+  function handleYesDate() {
+    transitionTo('p1', 'p2');
+  }
+
+  // ── PAGE 2 YES ──
+  function handleYesMarriage() {
+    launchConfetti();
+    transitionTo('p2', 'p3', () => {
+      document.getElementById('finalEmoji').textContent = '💍🌸';
+      document.getElementById('finalTitle').innerHTML = 'she said<br><span>yes. twice.</span>';
+      document.getElementById('finalBody').innerHTML = `
+        two yeses in one night.<br>
+        i genuinely did not expect this to work.<br><br>
+        you are extraordinary, Maria.<br>
+        and i am very, very lucky.
+      `;
     });
-    dots.forEach((d, i) => d.classList.toggle('active', i === active));
-  });
+  }
+
+  // ── PAGE 2 WAIT ──
+  function handleWait() {
+    transitionTo('p2', 'p3', () => {
+      document.getElementById('finalEmoji').textContent = '🌸';
+      document.getElementById('finalTitle').innerHTML = 'fair<br><span>enough.</span>';
+      document.getElementById('finalBody').innerHTML = `
+        noted. completely reasonable.<br>
+        we just started dating literally a minute ago.<br><br>
+        i'll ask again in a few years.<br>
+        <em>(i'm very patient.)</em>
+      `;
+    });
+  }
+
+  // ── CONFETTI ──
+  function launchConfetti() {
+    const confettiColors = ['#c0687e','#e8b4bf','#f5d0de','#2d1f29','#fdf0f3','#a8536a'];
+    for (let i = 0; i < 80; i++) {
+      setTimeout(() => {
+        const c = document.createElement('div');
+        c.className = 'confetti-piece';
+        const size = 5 + Math.random() * 8;
+        c.style.cssText = `
+          left:${Math.random()*100}vw;
+          top:0;
+          width:${size}px;
+          height:${size * (Math.random() > 0.5 ? 1 : 2.5)}px;
+          background:${confettiColors[Math.floor(Math.random()*confettiColors.length)]};
+          animation-duration:${2 + Math.random() * 3}s;
+          animation-delay:0s;
+          border-radius:${Math.random() > 0.5 ? '50%' : '1px'};
+        `;
+        document.body.appendChild(c);
+        setTimeout(() => c.remove(), 5000);
+      }, i * 30);
+    }
+  }
 </script>
 </body>
 </html>
